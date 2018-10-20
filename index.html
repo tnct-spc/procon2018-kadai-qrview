@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>QRView</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/qrcode.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+    <center>
+        <div id="qrcode"></div>
+    </center>
+
+    <script src="js/jsOTP.min.js"></script>
+    
+    <script type="text/javascript">
+        $ = function(sel) {
+            return document.querySelector(sel);
+        };
+        
+        var secret = "23TplPdS46Juzcyx";
+        var deviceID = "4D3A";
+        
+        var totp = new jsOTP.totp(180, 6);
+        var code = totp.getOtp(secret);
+        
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width : getSize()*0.8,
+            height : getSize()*0.8
+        });
+        
+        function makeCode (secret, deviceID) {		
+            var text = totp.getOtp(secret);;
+            qrcode.makeCode("https://verify.mosaiq.jp/" + deviceID + text);
+        }
+        
+        makeCode(secret, deviceID);
+        
+        var timeLoop = function(secret, deviceID) {
+            var epoch = Math.round(new Date().getTime() / 1000.0);
+            var countDown = 180 - (epoch % 180);
+            if (epoch % 180 == 0) makeCode(secret, deviceID);
+        }
+
+        setInterval(function(){timeLoop(secret, deviceID)}, 1000);
+    </script>
+</body>
+</html>>
