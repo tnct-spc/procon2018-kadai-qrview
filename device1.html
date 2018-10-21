@@ -35,7 +35,7 @@
         
         function makeCode (secret, deviceID) {		
             var text = totp.getOtp(secret);;
-            qrcode.makeCode("https://verify.mosaiq.jp/" + deviceID + text);
+            qrcode.makeCode("https://redirect.mosaiq.jp/" + deviceID + text);
         }
         
         makeCode(secret, deviceID);
